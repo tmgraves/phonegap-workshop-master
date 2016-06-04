@@ -73,6 +73,11 @@ var app = {
     },
 
     registerEvents: function () {
+        if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile)/)) {
+            document.addEventListener('deviceready', this.onDeviceReady, false);
+        } else {
+            this.onDeviceReady(); //this is the browser
+        }
         $(window).on('hashchange', $.proxy(this.route, this));
         var self = this;
         // Check of browser supports touch events...
@@ -127,6 +132,31 @@ var app = {
         }
     },
     
+    onDeviceReady: function () {
+        // app.receivedEvent('deviceready');
+        navigator.geolocation.getCurrentPosition(app.onSuccess, app.onError);
+    },
+
+    onSuccess: function (position) {
+        var longitude = position.coords.longitude;
+        var latitude = position.coords.latitude;
+        var latLong = new google.maps.LatLng(latitude, longitude);
+
+        var mapOptions = {
+            center: latLong,
+            zoom: 13,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+        var marker = new google.maps.Marker({
+            position: latLong,
+            map: map,
+            title: 'my location'
+        });
+    },
+
     initialize: function () {
         this.detailsURL = /^#employees\/(\d{1,})/;
         this.homeTpl = Handlebars.compile($("#home-tpl").html());
