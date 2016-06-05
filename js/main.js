@@ -52,10 +52,12 @@ var app = {
         if (page === app.homePage) {
             // Always apply a Back transition (slide from left) when we go back to the search page
             $(page.el).attr('class', 'page stage-left');
+            alert("left");
             currentPageDest = "stage-right";
         } else {
             // Forward transition (slide from right)
             $(page.el).attr('class', 'page stage-right');
+            alert("right");
             currentPageDest = "stage-left";
         }
 
